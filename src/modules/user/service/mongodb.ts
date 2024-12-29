@@ -1,15 +1,25 @@
 import { Paging, Paginated, UserRole, TokenType } from '~/shared/interface';
 import { IUserRepository } from '../interface';
-import { IAuthen, IUpdateUserForm, IUserCondForm, User } from '../model';
+import { IUpdateUserForm, IUserCondForm, User } from '../model';
 import mongodbService from '~/shared/common/mongodb';
 import { ObjectId } from 'mongodb';
 import jwt from '~/shared/common/jwt';
 import appConfig from '~/shared/common/config';
 
 export class MongodbUserRepository implements IUserRepository {
-  async generateToken(userId: string, type: TokenType, expiresIn?: string): Promise<string> {
+  async generateToken({
+    userId,
+    type,
+    role = UserRole.ENTERPRISE,
+    expiresIn,
+  }: {
+    userId: string;
+    type: TokenType;
+    role?: UserRole;
+    expiresIn?: string;
+  }): Promise<string> {
     return jwt.generateToken({
-      payload: { sub: userId, role: UserRole.USER, type },
+      payload: { sub: userId, role, type },
       options: { expiresIn: expiresIn ?? appConfig.jwt.accessTokenExpiresIn },
     });
   }

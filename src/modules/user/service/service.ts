@@ -22,8 +22,13 @@ export class UserService implements IUserService {
 
     // Generate token
     const [access_token, refresh_token] = await Promise.all([
-      this.repository.generateToken(user._id.toString(), TokenType.AccessToken),
-      this.repository.generateToken(user._id.toString(), TokenType.RefreshToken, appConfig.jwt.refreshTokenExpiresIn),
+      // this.repository.generateToken(user._id.toString(), TokenType.AccessToken),
+      this.repository.generateToken({ userId: user._id.toString(), type: TokenType.AccessToken }),
+      this.repository.generateToken({
+        userId: user._id.toString(),
+        type: TokenType.AccessToken,
+        expiresIn: appConfig.jwt.refreshTokenExpiresIn,
+      }),
     ]);
 
     // Add new refresh token to db
@@ -41,8 +46,12 @@ export class UserService implements IUserService {
 
     // Generate token
     const [access_token, refresh_token] = await Promise.all([
-      this.repository.generateToken(user._id.toString(), TokenType.AccessToken),
-      this.repository.generateToken(user._id.toString(), TokenType.RefreshToken, appConfig.jwt.refreshTokenExpiresIn),
+      this.repository.generateToken({ userId: user._id.toString(), type: TokenType.AccessToken }),
+      this.repository.generateToken({
+        userId: user._id.toString(),
+        type: TokenType.AccessToken,
+        expiresIn: appConfig.jwt.refreshTokenExpiresIn,
+      }),
     ]);
 
     // Add new refresh token to db
@@ -70,8 +79,12 @@ export class UserService implements IUserService {
 
     // Create new token
     const [access_token, refresh_token] = await Promise.all([
-      this.repository.generateToken(decoded.sub, TokenType.AccessToken),
-      this.repository.generateToken(decoded.sub, TokenType.RefreshToken, `${remainingTime}s`),
+      this.repository.generateToken({ userId: decoded.sub, type: TokenType.AccessToken }),
+      this.repository.generateToken({
+        userId: decoded.sub,
+        type: TokenType.RefreshToken,
+        expiresIn: `${remainingTime}s`,
+      }),
     ]);
 
     // Add new refresh token to db

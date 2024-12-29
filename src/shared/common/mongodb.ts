@@ -1,7 +1,6 @@
 import { MongoClient, Db, Collection } from 'mongodb';
 import { User } from '~/modules/user/model';
 import appConfig from './config';
-import { ITokenPayload } from '../interface';
 
 const uri = `mongodb+srv://${appConfig.db.mongodbUser}:${appConfig.db.mongodbPassword}@clustersing.072ry7k.mongodb.net/?retryWrites=true&w=majority`;
 

@@ -9,28 +9,24 @@ export interface AuthContext extends Context {
 }
 
 async function decodeToken(ctx: Context) {
-  try {
-    const token = ctx.headers['authorization']?.replace('Bearer', '').trim();
+  const token = ctx.headers['authorization']?.replace('Bearer', '').trim();
 
-    if (!token) {
-      throw ErrTokenInvalid.withLog('Token is missing');
-    }
-
-    const decoded = await jwt.verifyToken(token);
-    if (!decoded) throw ErrTokenInvalid.withLog('Token parse failed');
-
-    return {
-      decoded,
-      token,
-    };
-  } catch (error) {
-    throw error;
+  if (!token) {
+    throw ErrTokenInvalid.withLog('Token is missing');
   }
+
+  const decoded = await jwt.verifyToken(token);
+  if (!decoded) throw ErrTokenInvalid.withLog('Token parse failed');
+
+  return {
+    decoded,
+    token,
+  };
 }
 
 function setupMiddlewares(): MdlFactory {
   async function authMiddleware(ctx: Context) {
-    let { decoded, token } = await decodeToken(ctx);
+    const { decoded, token } = await decodeToken(ctx);
     return { decoded, token };
   }
   return {

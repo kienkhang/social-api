@@ -8,7 +8,7 @@ async function generateToken({ payload, options = {} }: { payload: ITokenPayload
 async function verifyToken(token: string): Promise<ITokenPayload | null> {
   try {
     return jwt.verify(token, appConfig.jwt.secretKey as string) as ITokenPayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
