@@ -1,0 +1,21 @@
+{
+  "name": "finalcial_management_api",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.1.1",
+    "@types/jsonwebtoken": "^9.0.7",
+    "elysia": "latest",
+    "elysia-helmet": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.11.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
