@@ -1,17 +1,13 @@
-import { Paging, Paginated, UserRole, TokenType } from "~/shared/interface";
-import { IUserRepository } from "../interface";
-import { IAuthen, IUpdateUserForm, IUserCondForm, User } from "../model";
-import mongodbService from "~/shared/common/mongodb";
-import { ObjectId } from "mongodb";
-import jwt from "~/shared/common/jwt";
-import appConfig from "~/shared/common/config";
+import { Paging, Paginated, UserRole, TokenType } from '~/shared/interface';
+import { IUserRepository } from '../interface';
+import { IAuthen, IUpdateUserForm, IUserCondForm, User } from '../model';
+import mongodbService from '~/shared/common/mongodb';
+import { ObjectId } from 'mongodb';
+import jwt from '~/shared/common/jwt';
+import appConfig from '~/shared/common/config';
 
 export class MongodbUserRepository implements IUserRepository {
-  async generateToken(
-    userId: string,
-    type: TokenType,
-    expiresIn?: string
-  ): Promise<string> {
+  async generateToken(userId: string, type: TokenType, expiresIn?: string): Promise<string> {
     return jwt.generateToken({
       payload: { sub: userId, role: UserRole.USER, type },
       options: { expiresIn: expiresIn ?? appConfig.jwt.accessTokenExpiresIn },
@@ -39,11 +35,7 @@ export class MongodbUserRepository implements IUserRepository {
 
     const count = (await cursor.clone().toArray()).length;
 
-    const result = await cursor
-      .clone()
-      .skip(offset)
-      .limit(paging.limit)
-      .toArray();
+    const result = await cursor.clone().skip(offset).limit(paging.limit).toArray();
 
     return {
       entries: result,
@@ -59,7 +51,7 @@ export class MongodbUserRepository implements IUserRepository {
       {
         _id: new ObjectId(id),
       },
-      { $set: form }
+      { $set: form },
     );
     return !!result.modifiedCount;
   }

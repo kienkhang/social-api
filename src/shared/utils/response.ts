@@ -1,5 +1,5 @@
-import { Paginated } from "@/shared/interface";
-import { Context } from "elysia";
+import { Paginated } from '@/shared/interface';
+import { Context } from 'elysia';
 
 const successResponse = (data: any, ctx: Context) => {
   ctx.set.status = 200;

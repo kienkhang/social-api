@@ -19,7 +19,7 @@ const appConfig = {
     hashPasswordKey: process.env.SECRET_PASSWORD,
     port: process.env.APP_PORT,
     prefixApiUrl: process.env.PREFIX_API_URL as string,
-    corsWhiteList: ["http://localhost:8081", "http://localhost:5173"],
+    corsWhiteList: ['http://localhost:8081', 'http://localhost:5173'],
   },
 };
 

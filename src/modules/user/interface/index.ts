@@ -1,13 +1,5 @@
-import { Paginated, Paging, TokenType } from "~/shared/interface";
-import {
-  IAuthen,
-  ILoginForm,
-  ISignupForm,
-  IUpdateProfileForm,
-  IUpdateUserForm,
-  IUserCondForm,
-  User,
-} from "../model";
+import { Paginated, Paging, TokenType } from '~/shared/interface';
+import { IAuthen, ILoginForm, ISignupForm, IUpdateProfileForm, IUpdateUserForm, IUserCondForm, User } from '../model';
 
 export interface IUserRepository {
   insert: (user: User) => Promise<User>;
@@ -15,11 +7,7 @@ export interface IUserRepository {
   findById: (id: string) => Promise<User | null>;
   findByCond: (id: IUserCondForm) => Promise<User | null>;
   list: (cond: IUserCondForm, paging: Paging) => Promise<Paginated<User>>;
-  generateToken: (
-    userId: string,
-    type: TokenType,
-    expiresIn?: string
-  ) => Promise<string>;
+  generateToken: (userId: string, type: TokenType, expiresIn?: string) => Promise<string>;
 }
 
 export interface IUserService {

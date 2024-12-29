@@ -1,7 +1,7 @@
-import app from "./app";
-import mongodbService from "./shared/common/mongodb";
-import setupMiddlewares from "./shared/middleware";
-import { setupUserModule } from "./modules/user";
+import app from './app';
+import mongodbService from './shared/common/mongodb';
+import setupMiddlewares from './shared/middleware';
+import { setupUserModule } from './modules/user';
 
 async function bootServer(port: number) {
   // Connect mongodb
@@ -17,9 +17,7 @@ async function bootServer(port: number) {
 
   // important, required listen(port) to run app
   app.listen(port);
-  console.log(
-    `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-  );
+  console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
 }
 
 bootServer(3000);

@@ -1,10 +1,10 @@
-import Elysia, { Context } from "elysia";
-import { IUserService } from "../interface";
-import { loginSchema, signupSchema, updateProfileSchema } from "../model";
-import { successResponse } from "~/shared/utils/response";
-import { AuthContext } from "~/shared/middleware";
-import { MdlFactory, TokenType } from "~/shared/interface";
-import { ErrTokenInvalid } from "~/shared/utils/error";
+import Elysia, { Context } from 'elysia';
+import { IUserService } from '../interface';
+import { loginSchema, signupSchema, updateProfileSchema } from '../model';
+import { successResponse } from '~/shared/utils/response';
+import { AuthContext } from '~/shared/middleware';
+import { MdlFactory, TokenType } from '~/shared/interface';
+import { ErrTokenInvalid } from '~/shared/utils/error';
 
 export class HttpUserController {
   constructor(private readonly service: IUserService) {}
@@ -40,8 +40,7 @@ export class HttpUserController {
 
   private async renewToken(ctx: AuthContext) {
     const token = ctx.token;
-    if (ctx.decoded.type !== TokenType.RefreshToken)
-      throw ErrTokenInvalid.withLog("Not the expected token");
+    if (ctx.decoded.type !== TokenType.RefreshToken) throw ErrTokenInvalid.withLog('Not the expected token');
 
     const data = await this.service.renewToken(token);
 
@@ -50,8 +49,7 @@ export class HttpUserController {
 
   private async logout(ctx: AuthContext) {
     const token = ctx.token;
-    if (ctx.decoded.type !== TokenType.RefreshToken)
-      throw ErrTokenInvalid.withLog("Not the expected token");
+    if (ctx.decoded.type !== TokenType.RefreshToken) throw ErrTokenInvalid.withLog('Not the expected token');
 
     const data = await this.service.logout(token);
 
@@ -59,15 +57,15 @@ export class HttpUserController {
   }
 
   getRoutes(mdlFactory: MdlFactory) {
-    const routes = new Elysia({ prefix: "/users" })
-      .post("/login", this.login.bind(this))
-      .post("/signup", this.signup.bind(this))
+    const routes = new Elysia({ prefix: '/users' })
+      .post('/login', this.login.bind(this))
+      .post('/signup', this.signup.bind(this))
       // auth middleware
       .derive(mdlFactory.auth)
-      .get("/", this.getProfile.bind(this))
-      .get("/update-profile", this.updateProfile.bind(this))
-      .get("/renew", this.renewToken.bind(this))
-      .get("/logout", this.logout.bind(this));
+      .get('/', this.getProfile.bind(this))
+      .get('/update-profile', this.updateProfile.bind(this))
+      .get('/renew', this.renewToken.bind(this))
+      .get('/logout', this.logout.bind(this));
     return routes;
   }
 }

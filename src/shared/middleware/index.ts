@@ -1,7 +1,7 @@
-import { ITokenPayload, MdlFactory } from "./../interface/index";
-import { type Context } from "elysia";
-import { ErrTokenInvalid } from "../utils/error";
-import jwt from "../common/jwt";
+import { ITokenPayload, MdlFactory } from './../interface/index';
+import { type Context } from 'elysia';
+import { ErrTokenInvalid } from '../utils/error';
+import jwt from '../common/jwt';
 
 export interface AuthContext extends Context {
   decoded: ITokenPayload;
@@ -10,14 +10,14 @@ export interface AuthContext extends Context {
 
 async function decodeToken(ctx: Context) {
   try {
-    const token = ctx.headers["authorization"]?.replace("Bearer", "").trim();
+    const token = ctx.headers['authorization']?.replace('Bearer', '').trim();
 
     if (!token) {
-      throw ErrTokenInvalid.withLog("Token is missing");
+      throw ErrTokenInvalid.withLog('Token is missing');
     }
 
     const decoded = await jwt.verifyToken(token);
-    if (!decoded) throw ErrTokenInvalid.withLog("Token parse failed");
+    if (!decoded) throw ErrTokenInvalid.withLog('Token parse failed');
 
     return {
       decoded,

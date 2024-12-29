@@ -1,10 +1,11 @@
-import { type Context } from "elysia";
-import jwt from "jsonwebtoken";
-import { z } from "zod";
+import { type Context } from 'elysia';
+import jwt from 'jsonwebtoken';
+import { z } from 'zod';
 
 export enum UserRole {
-  ADMIN = "admin",
-  USER = "user",
+  ADMIN = 'admin',
+  PERSONAL = 'personal',
+  ENTERPRISE = 'enterprise',
 }
 
 export enum TokenType {
@@ -16,15 +17,8 @@ export enum TokenType {
 
 // Paging
 export const pagingSchema = z.object({
-  page: z.coerce
-    .number()
-    .min(1, { message: "Page number must be at least 1" })
-    .default(1),
-  limit: z.coerce
-    .number()
-    .min(1, { message: "Limit must be at least 1" })
-    .max(100)
-    .default(20),
+  page: z.coerce.number().min(1, { message: 'Page number must be at least 1' }).default(1),
+  limit: z.coerce.number().min(1, { message: 'Limit must be at least 1' }).max(100).default(20),
   sort: z.string().optional(),
   order: z.string().optional(),
 });
