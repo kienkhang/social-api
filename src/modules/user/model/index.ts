@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { z } from 'zod';
 import { ErrNameAtLeast2Chars, ErrPasswordAtLeast6Chars, ErrUsernameInvalid } from './error';
 import { UserRole } from '~/shared/interface';
+import { hashPassword } from '~/shared/common/hash';
 
 export interface IAuthen {
   access_token: string;
@@ -20,7 +21,10 @@ export const userSchema = z.object({
   _id: z.instanceof(ObjectId),
   name: z.string().min(2, ErrNameAtLeast2Chars.message),
   email: z.string().email(),
-  password: z.string().min(6, ErrPasswordAtLeast6Chars.message),
+  password: z
+    .string()
+    .min(6, ErrPasswordAtLeast6Chars.message)
+    .transform((arg) => hashPassword(arg)),
   username: z
     .string()
     .min(3, 'Username must not be less than 3 characters')
