@@ -12,7 +12,12 @@ function buildApp() {
 
   // app error handling
   app.error({ AppError }).onError((ctx) => {
-    return responseErr(ctx.error, ctx);
+    switch (ctx.code) {
+      case 'AppError':
+        return responseErr(ctx.error, ctx);
+      default:
+        return ctx.error;
+    }
   });
 
   return app;
