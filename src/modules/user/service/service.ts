@@ -1,4 +1,4 @@
-import { AppError } from '~/shared/utils/error';
+import { AppError, ErrInvalidRequest } from '~/shared/utils/error';
 import { IUserService } from '../interface';
 import { ILoginForm, IAuthen, ISignupForm, IUpdateProfileForm, User, userSchema } from '../model';
 import { MongodbUserRepository } from './mongodb';
@@ -8,6 +8,7 @@ import appConfig from '~/shared/common/config';
 import jwt from '~/shared/common/jwt';
 import mongodbService from '~/shared/common/mongodb';
 import { hashPassword } from '~/shared/common/hash';
+import { ObjectId } from 'mongodb';
 
 export class UserService implements IUserService {
   constructor(private readonly repository: MongodbUserRepository) {}
@@ -39,10 +40,10 @@ export class UserService implements IUserService {
     };
   }
   async signup(form: ISignupForm): Promise<IAuthen> {
-    const newUser = userSchema.parse(form);
+    const newUser = userSchema.parse({ ...form, _id: new ObjectId() });
     const user = await this.repository.insert(newUser);
 
-    if (!user) throw AppError.from(ErrInvalidEmailAndPassword, 400).withLog('Incorrect login information');
+    if (!user) throw AppError.from(ErrInvalidRequest, 400).withLog('Incorrect login information');
 
     // Generate token
     const [access_token, refresh_token] = await Promise.all([
