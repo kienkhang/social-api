@@ -36,7 +36,7 @@ export class MongodbUserRepository implements IUserRepository {
 
   async insert(user: User): Promise<User> {
     const result = await mongodbService.users.insertOne(user);
-    const found = await mongodbService.users.findOne({ id: result.insertedId });
+    const found = await mongodbService.users.findOne({ _id: result.insertedId });
     return found as User;
   }
   async list(cond: IUserCondForm, paging: Paging): Promise<Paginated<User>> {
