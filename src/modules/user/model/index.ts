@@ -28,12 +28,12 @@ export const userSchema = z.object({
     .regex(/^[a-zA-Z0-9_]+$/, ErrUsernameInvalid.message),
   created_at: z.date().default(new Date()),
   updated_at: z.date().default(new Date()),
-  status: z.nativeEnum(Status).default(Status.PENDING).optional(),
-  role: z.nativeEnum(UserRole).default(UserRole.PERSONAL).optional(),
-  email_verify_token: z.string().nullable().optional(),
-  forgot_password_token: z.string().nullable().optional(),
-  bio: z.string().nullable().optional(),
-  avatar: z.string().nullable().optional(),
+  status: z.nativeEnum(Status).optional().default(Status.PENDING),
+  role: z.nativeEnum(UserRole).optional().default(UserRole.PERSONAL),
+  email_verify_token: z.string().optional().nullable().default(null),
+  forgot_password_token: z.string().optional().nullable().default(null),
+  bio: z.string().optional().default(''),
+  avatar: z.string().optional().default(''),
 });
 
 export type User = z.infer<typeof userSchema>;
