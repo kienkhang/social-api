@@ -27,7 +27,7 @@ export class UserService implements IUserService {
       this.repository.generateToken({ userId: user._id.toString(), type: TokenType.AccessToken }),
       this.repository.generateToken({
         userId: user._id.toString(),
-        type: TokenType.AccessToken,
+        type: TokenType.RefreshToken,
         expiresIn: appConfig.jwt.refreshTokenExpiresIn,
       }),
     ]);
@@ -50,7 +50,7 @@ export class UserService implements IUserService {
       this.repository.generateToken({ userId: user._id.toString(), type: TokenType.AccessToken }),
       this.repository.generateToken({
         userId: user._id.toString(),
-        type: TokenType.AccessToken,
+        type: TokenType.RefreshToken,
         expiresIn: appConfig.jwt.refreshTokenExpiresIn,
       }),
     ]);
