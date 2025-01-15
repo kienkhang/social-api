@@ -20,4 +20,4 @@ async function bootServer(port: number) {
   console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
 }
 
-bootServer(3000);
+bootServer(process.env.APP_PORT ? +process.env.APP_PORT : 3000);
