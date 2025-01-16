@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
+    "@oslojs/oauth2": "^0.5.0",
     "@types/jsonwebtoken": "^9.0.7",
     "elysia": "latest",
     "elysia-helmet": "^2.0.0",
+    "googleapis": "^144.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.11.0",
     "zod": "^3.23.8"

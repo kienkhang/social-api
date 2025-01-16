@@ -21,6 +21,10 @@ const appConfig = {
     prefixApiUrl: process.env.PREFIX_API_URL as string,
     corsWhiteList: ['http://localhost:8081', 'http://localhost:5173'],
   },
+  oauth: {
+    ggClientId: process.env.GG_OAUTH_CLIENT_ID,
+    ggClientSecret: process.env.GG_OAUTH_CLIENT_SECRET,
+  },
 };
 
 export default appConfig;
