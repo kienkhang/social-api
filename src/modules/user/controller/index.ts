@@ -56,8 +56,20 @@ export class HttpUserController {
     return successResponse(data, ctx);
   }
 
+  private async requestLogin(ctx: Context) {
+    const redirectUri = await this.service.requestLogin({ provider: ctx.params.provider });
+
+    return successResponse({ url: redirectUri }, ctx);
+  }
+
+  private async loginWithProvider(ctx: Context) {
+    const profile = await this.service.loginWithProvider({ provider: ctx.params.provider, form: ctx.body });
+    return successResponse(profile, ctx);
+  }
+
   getRoutes(mdlFactory: MdlFactory) {
-    const routes = new Elysia({ prefix: '/users' })
+    const module = new Elysia();
+    const usersRoute = new Elysia({ prefix: '/users' })
       .post('/login', this.login.bind(this))
       .post('/signup', this.signup.bind(this))
       // auth middleware
@@ -66,6 +78,13 @@ export class HttpUserController {
       .get('/update-profile', this.updateProfile.bind(this))
       .get('/renew', this.renewToken.bind(this))
       .get('/logout', this.logout.bind(this));
-    return routes;
+
+    const oauthRoute = new Elysia({ prefix: '/oauth' })
+      .get('/request/:provider', this.requestLogin.bind(this))
+      .post('/login/:provider', this.loginWithProvider.bind(this));
+
+    module.use(usersRoute);
+    module.use(oauthRoute);
+    return module;
   }
 }

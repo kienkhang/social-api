@@ -3,7 +3,6 @@ import mongodbService from './shared/common/mongodb';
 import setupMiddlewares from './shared/middleware';
 import { setupUserModule } from './modules/user';
 import appConfig from './shared/common/config';
-import { setupOauthModule } from './modules/oauth';
 
 async function bootServer(port: number) {
   // Connect mongodb
@@ -14,10 +13,8 @@ async function bootServer(port: number) {
   };
   // create module
   const userModule = setupUserModule(sctx);
-  const oauthModule = setupOauthModule();
   // setupModule
   app.use(userModule);
-  app.use(oauthModule);
 
   // important, required listen(port) to run app
   app.listen(port);
