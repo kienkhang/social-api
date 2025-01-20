@@ -1,10 +1,13 @@
 import Elysia, { Context } from 'elysia';
+// Common
+import { MdlFactory, TokenType } from '~/shared/interface';
+import { AuthContext } from '~/shared/middleware';
+import { ErrTokenInvalid } from '~/shared/utils/error';
+import { successResponse } from '~/shared/utils/response';
+// Model
 import { IUserService } from '../interface';
 import { loginSchema, signupSchema, updateProfileSchema } from '../model';
-import { successResponse } from '~/shared/utils/response';
-import { AuthContext } from '~/shared/middleware';
-import { MdlFactory, TokenType } from '~/shared/interface';
-import { ErrTokenInvalid } from '~/shared/utils/error';
+import { OauthContext } from '../model/oauth';
 
 export class HttpUserController {
   constructor(private readonly service: IUserService) {}
@@ -56,14 +59,23 @@ export class HttpUserController {
     return successResponse(data, ctx);
   }
 
-  private async requestLogin(ctx: Context) {
-    const redirectUri = await this.service.requestLogin({ provider: ctx.params.provider });
+  private async requestLogin(ctx: OauthContext) {
+    const state = crypto.randomUUID();
+    // Store context to verify
+    ctx.store.login_state = state;
+    const redirectUri = await this.service.requestLogin({ provider: ctx.params.provider, state });
 
     return successResponse({ url: redirectUri }, ctx);
   }
 
-  private async loginWithProvider(ctx: Context) {
-    const profile = await this.service.loginWithProvider({ provider: ctx.params.provider, form: ctx.body });
+  private async loginWithProvider(ctx: OauthContext) {
+    const profile = await this.service.loginWithProvider({
+      provider: ctx.params.provider,
+      form: ctx.body,
+      login_state: ctx.store.login_state,
+    });
+    // Reset state
+    ctx.store.login_state = '';
     return successResponse(profile, ctx);
   }
 
@@ -80,9 +92,9 @@ export class HttpUserController {
       .get('/logout', this.logout.bind(this));
 
     const oauthRoute = new Elysia({ prefix: '/oauth' })
+      .state('login_state', '')
       .get('/request/:provider', this.requestLogin.bind(this))
       .post('/login/:provider', this.loginWithProvider.bind(this));
-
     module.use(usersRoute);
     module.use(oauthRoute);
     return module;

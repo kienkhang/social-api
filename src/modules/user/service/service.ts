@@ -94,12 +94,11 @@ export class UserService implements IUserService {
 
   // ============== Oauth =============
   // Request with oauth
-  private async requestGoogle(): Promise<string> {
+  private async requestGoogle(state: string): Promise<string> {
     const scope = [
       'https://www.googleapis.com/auth/userinfo.email',
       'https://www.googleapis.com/auth/userinfo.profile',
     ]; // https://developers.google.com/identity/protocols/oauth2/scopes?hl=vi
-    const state = crypto.randomUUID();
     const url = googleOauthClient.generateAuthUrl({
       scope,
       state,
@@ -110,10 +109,10 @@ export class UserService implements IUserService {
   }
 
   // Login with oauth
-  private async loginGoogle({ code, state }: LoginWithGoogleInput): Promise<IAuthen> {
+  async loginGoogle({ code, state, login_state }: LoginWithGoogleInput): Promise<IAuthen> {
     if (!code) {
       throw ErrInvalidRequest.withMessage('Code mismatch');
-    } else if (!state) {
+    } else if (!state || state !== login_state) {
       throw ErrInvalidRequest.withMessage('State mismatch. Possible CSRF attack');
     }
 
@@ -141,26 +140,23 @@ export class UserService implements IUserService {
     }
   }
 
-  loginWithProvider(input: LoginWithProviderInput): Promise<IAuthen> {
-    const provider = input.provider;
+  loginWithProvider({ provider, form, login_state }: LoginWithProviderInput): Promise<IAuthen> {
     const strategies: { [key in AskLoginInput['provider']]: (f: any) => Promise<IAuthen> } = {
-      google: this.loginGoogle,
+      google: this.loginGoogle.bind(this), // assign UserService.loginGoogle to strategies[google], because 'this' using inside strategies object
     };
-
     if (provider in strategies) {
-      return strategies[provider](input.form);
+      return strategies[provider]({ ...form, login_state });
     } else {
       throw ErrInvalidRequest.withLog('Invalid provider');
     }
   }
-  requestLogin(input: AskLoginInput): Promise<string> {
-    const provider = input.provider;
-    const strategies: { [key in AskLoginInput['provider']]: () => Promise<string> } = {
+  requestLogin({ provider, state }: AskLoginInput): Promise<string> {
+    const strategies: { [key in AskLoginInput['provider']]: (s: string) => Promise<string> } = {
       google: this.requestGoogle,
     };
 
     if (provider in strategies) {
-      return strategies[provider]();
+      return strategies[provider](state);
     } else {
       throw ErrInvalidRequest.withLog('Invalid provider');
     }

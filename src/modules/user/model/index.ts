@@ -28,7 +28,7 @@ export const userSchema = z.object({
   username: z
     .string()
     .min(3, 'Username must not be less than 3 characters')
-    .max(20, 'Username must not be greater than 20 characters')
+    .max(30, 'Username must not be greater than 30 characters')
     .regex(/^[a-zA-Z0-9_]+$/, ErrUsernameInvalid.message),
   created_at: z.date().default(new Date()),
   updated_at: z.date().default(new Date()),
